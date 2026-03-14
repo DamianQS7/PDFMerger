@@ -1,48 +1,23 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, effect } from '@angular/core';
 import { PDFDocument } from 'pdf-lib';
-
-export interface PdfFile {
-  id: string;
-  name: string;
-  size: number;
-  file: File;
-}
+import { DropZone } from './components/drop-zone/drop-zone';
+import { PdfFile } from './types/pdf-file.interface';
+import { FilesList } from "./components/files-list/files-list";
 
 @Component({
   selector: 'app-root',
+  imports: [DropZone, FilesList],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
   readonly files = signal<PdfFile[]>([]);
-  readonly isDragging = signal(false);
   readonly isMerging = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
-  readonly canMerge = computed(() => this.files().length >= 2);
+  protected canMerge = computed(() => this.files().length >= 2);
 
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    this.isDragging.set(true);
-  }
-
-  onDragLeave() {
-    this.isDragging.set(false);
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    this.isDragging.set(false);
-    this.addFiles(Array.from(event.dataTransfer?.files ?? []));
-  }
-
-  onFileSelect(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.addFiles(Array.from(input.files ?? []));
-    input.value = '';
-  }
-
-  private addFiles(files: File[]) {
+  addFiles(files: File[]) {
     this.errorMessage.set(null);
     const pdfs = files.filter((f) => f.type === 'application/pdf');
     const skipped = files.length - pdfs.length;
@@ -64,38 +39,7 @@ export class App {
     ]);
   }
 
-  moveUp(index: number) {
-    if (index === 0) return;
-    this.files.update((files) => {
-      const next = [...files];
-      [next[index - 1], next[index]] = [next[index], next[index - 1]];
-      return next;
-    });
-  }
-
-  moveDown(index: number) {
-    this.files.update((files) => {
-      if (index === files.length - 1) return files;
-      const next = [...files];
-      [next[index], next[index + 1]] = [next[index + 1], next[index]];
-      return next;
-    });
-  }
-
-  removeFile(id: string) {
-    this.files.update((files) => files.filter((f) => f.id !== id));
-  }
-
-  clearAll() {
-    this.files.set([]);
-    this.errorMessage.set(null);
-  }
-
-  formatSize(bytes: number): string {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  }
+  protected updateFilesInList = (files: PdfFile[]): void => this.files.set(files);
 
   async mergePdfs() {
     if (!this.canMerge()) return;
@@ -129,4 +73,9 @@ export class App {
       this.isMerging.set(false);
     }
   }
+
+  private clearErrorMsgEff = effect(() => {
+    if(this.files().length === 0)
+      this.errorMessage.set(null);
+  });
 }
