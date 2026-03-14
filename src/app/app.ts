@@ -3,10 +3,11 @@ import { PDFDocument } from 'pdf-lib';
 import { DropZone } from './components/drop-zone/drop-zone';
 import { PdfFile } from './types/pdf-file.interface';
 import { FilesList } from "./components/files-list/files-list";
+import { MergeButton } from "./components/merge-button/merge-button";
 
 @Component({
   selector: 'app-root',
-  imports: [DropZone, FilesList],
+  imports: [DropZone, FilesList, MergeButton],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -14,7 +15,6 @@ export class App {
   readonly files = signal<PdfFile[]>([]);
   readonly isMerging = signal(false);
   readonly errorMessage = signal<string | null>(null);
-
   protected canMerge = computed(() => this.files().length >= 2);
 
   addFiles(files: File[]) {
@@ -41,8 +41,9 @@ export class App {
 
   protected updateFilesInList = (files: PdfFile[]): void => this.files.set(files);
 
-  async mergePdfs() {
+  protected async mergePdfs() {
     if (!this.canMerge()) return;
+    
     this.isMerging.set(true);
     this.errorMessage.set(null);
 
