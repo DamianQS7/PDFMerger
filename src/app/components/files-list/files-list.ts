@@ -5,7 +5,6 @@ import { PdfFile } from '../../types/pdf-file.interface';
   selector: 'app-files-list',
   imports: [],
   templateUrl: './files-list.html',
-  styleUrl: './files-list.css',
 })
 export class FilesList {
   public files = input.required<PdfFile[]>();

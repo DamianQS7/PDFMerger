@@ -3,7 +3,6 @@ import { Component, computed, input, output } from '@angular/core';
 @Component({
   selector: 'app-merge-button',
   imports: [],
-  styleUrl: './merge-button.css',
   template: `
     <div class="mt-6 flex justify-center">
       <button

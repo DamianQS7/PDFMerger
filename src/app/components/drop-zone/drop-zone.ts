@@ -3,7 +3,6 @@ import { Component, computed, output, signal } from '@angular/core';
 @Component({
   selector: 'app-drop-zone',
   imports: [],
-  styleUrl: './drop-zone.css',
   template: `
     <div
       class="border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors duration-200 select-none"

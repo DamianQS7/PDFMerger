@@ -4,10 +4,11 @@ import { DropZone } from './components/drop-zone/drop-zone';
 import { PdfFile } from './types/pdf-file.interface';
 import { FilesList } from "./components/files-list/files-list";
 import { MergeButton } from "./components/merge-button/merge-button";
+import { PdfPreview } from "./components/pdf-preview/pdf-preview";
 
 @Component({
   selector: 'app-root',
-  imports: [DropZone, FilesList, MergeButton],
+  imports: [DropZone, FilesList, MergeButton, PdfPreview],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
