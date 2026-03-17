@@ -16,7 +16,16 @@ export class App {
   readonly files = signal<PdfFile[]>([]);
   readonly isMerging = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  readonly isDarkMode = signal(false);
   protected canMerge = computed(() => this.files().length >= 2);
+
+  private darkModeEff = effect(() => {
+    document.documentElement.classList.toggle('dark', this.isDarkMode());
+  });
+
+  protected toggleDarkMode() {
+    this.isDarkMode.update(v => !v);
+  }
 
   addFiles(files: File[]) {
     this.errorMessage.set(null);
