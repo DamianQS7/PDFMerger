@@ -1,10 +1,11 @@
-import { Component, signal, computed, effect } from '@angular/core';
+import { Component, signal, computed, effect, inject } from '@angular/core';
 import { PDFDocument } from 'pdf-lib';
 import { DropZone } from './components/drop-zone/drop-zone';
 import { PdfFile } from './types/pdf-file.interface';
 import { FilesList } from "./components/files-list/files-list";
 import { MergeButton } from "./components/merge-button/merge-button";
 import { PdfPreview } from "./components/pdf-preview/pdf-preview";
+import { ThemeService } from './services/theme-service';
 
 @Component({
   selector: 'app-root',
@@ -13,20 +14,17 @@ import { PdfPreview } from "./components/pdf-preview/pdf-preview";
   styleUrl: './app.css',
 })
 export class App {
+  // Services
+  public readonly themeService = inject(ThemeService);
+
+  // Properties
   readonly files = signal<PdfFile[]>([]);
   readonly isMerging = signal(false);
   readonly errorMessage = signal<string | null>(null);
-  readonly isDarkMode = signal(false);
+  
   protected canMerge = computed(() => this.files().length >= 2);
 
-  private darkModeEff = effect(() => {
-    document.documentElement.classList.toggle('dark', this.isDarkMode());
-  });
-
-  protected toggleDarkMode() {
-    this.isDarkMode.update(v => !v);
-  }
-
+  // Methods
   addFiles(files: File[]) {
     this.errorMessage.set(null);
     const pdfs = files.filter((f) => f.type === 'application/pdf');
