@@ -45,21 +45,21 @@ describe('ThemeService', () => {
 
   describe('DOM effect', () => {
     it('does not add the "dark" class to <html> on initialisation', () => {
-      TestBed.flushEffects();
+      TestBed.tick();
       expect(document.documentElement.classList.contains('dark')).toBe(false);
     });
 
     it('adds the "dark" class to <html> when isDarkMode becomes true', () => {
       service.toggleDarkMode();
-      TestBed.flushEffects();
+      TestBed.tick();
       expect(document.documentElement.classList.contains('dark')).toBe(true);
     });
 
     it('removes the "dark" class from <html> when isDarkMode returns to false', () => {
       service.toggleDarkMode();
-      TestBed.flushEffects();
+      TestBed.tick();
       service.toggleDarkMode();
-      TestBed.flushEffects();
+      TestBed.tick();
       expect(document.documentElement.classList.contains('dark')).toBe(false);
     });
   });
