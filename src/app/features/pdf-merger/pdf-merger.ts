@@ -11,7 +11,6 @@ import { ThemeService } from '../../services/theme-service';
   selector: 'app-pdf-merger',
   imports: [DropZone, FilesList, MergeButton, PdfPreview],
   templateUrl: './pdf-merger.html',
-  styleUrl: './pdf-merger.css',
 })
 export class PdfMerger {
   // Services
