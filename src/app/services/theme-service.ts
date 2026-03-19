@@ -10,7 +10,7 @@ export class ThemeService {
     this.isDarkMode.update(v => !v);
   }
 
-  private darkModeEff = effect(() => {
+  private toggleDarkClassEffect = effect(() => {
     document.documentElement.classList.toggle('dark', this.isDarkMode());
   });
 }

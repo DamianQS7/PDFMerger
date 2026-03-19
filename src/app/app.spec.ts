@@ -1,5 +1,16 @@
 import { TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { App } from './app';
+
+// ─── Module mock ──────────────────────────────────────────────────────────────
+// pdfjs-dist requires browser APIs (DOMMatrix, canvas workers) that are
+// unavailable in the jsdom test environment, so we mock the entire module.
+
+vi.mock('pdfjs-dist', () => ({
+  getDocument: vi.fn(),
+}));
+
+// ─── Suite ────────────────────────────────────────────────────────────────────
 
 describe('App', () => {
   beforeEach(async () => {
@@ -14,10 +25,9 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('renders the pdf-merger component', () => {
     const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, PdfMerger');
+    expect(compiled.querySelector('app-pdf-merger')).toBeTruthy();
   });
 });

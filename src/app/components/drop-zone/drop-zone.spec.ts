@@ -7,8 +7,8 @@ function createFile(name: string): File {
   return new File([new Uint8Array(10)], name, { type: 'application/pdf' });
 }
 
-// jsdom does not implement DragEvent, so we build a plain object that satisfies
-// the interface surface used by the component.
+// jsdom does not implement DragEvent, so we build a "mock" object that satisfies
+// the interface used by the component.
 function createDragEvent(files: File[] = []): Partial<DragEvent> {
   return {
     preventDefault: vi.fn(),
@@ -40,7 +40,7 @@ describe('DropZone', () => {
     return getNativeElement().querySelector('div')!;
   }
 
-  function getFileInput(): HTMLInputElement {
+  function getFileInputElement(): HTMLInputElement {
     return getNativeElement().querySelector('input[type="file"]')!;
   }
 
@@ -62,7 +62,7 @@ describe('DropZone', () => {
     });
 
     it('has a hidden file input that accepts PDF files', () => {
-      const input = getFileInput();
+      const input = getFileInputElement();
       expect(input).toBeTruthy();
       expect(input.accept).toContain('.pdf');
       expect(input.multiple).toBe(true);
@@ -146,21 +146,21 @@ describe('DropZone', () => {
     describe('via file input', () => {
       it('emits the selected files on change', () => {
         const files = [createFile('x.pdf'), createFile('y.pdf')];
-        const input = getFileInput();
+        const input = getFileInputElement();
         Object.defineProperty(input, 'files', { value: files, configurable: true });
         input.dispatchEvent(new Event('change'));
         expect(emitted).toEqual(files);
       });
 
       it('emits an empty array when no files are selected', () => {
-        const input = getFileInput();
+        const input = getFileInputElement();
         Object.defineProperty(input, 'files', { value: [], configurable: true });
         input.dispatchEvent(new Event('change'));
         expect(emitted).toEqual([]);
       });
 
       it('emits an empty array when input.files is null', () => {
-        const input = getFileInput();
+        const input = getFileInputElement();
         Object.defineProperty(input, 'files', { value: null, configurable: true });
         input.dispatchEvent(new Event('change'));
         expect(emitted).toEqual([]);
@@ -172,7 +172,7 @@ describe('DropZone', () => {
 
   describe('click to browse', () => {
     it('triggers a click on the hidden file input when the drop zone is clicked', () => {
-      const input = getFileInput();
+      const input = getFileInputElement();
       const spy = vi.spyOn(input, 'click');
       getDropZone().click();
       expect(spy).toHaveBeenCalled();
