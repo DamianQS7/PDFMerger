@@ -1,59 +1,93 @@
-# PdfMerger
+# PDF Merger
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.1.
+A browser-based tool for merging multiple PDF files into a single document. All processing happens entirely on the client — no files are uploaded to any server.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- **Drag & drop or click to browse** — add PDF files via drag-and-drop or the native file picker
+- **File queue management** — reorder files up/down and remove individual files or clear the entire list
+- **Live preview** — thumbnail previews of all queued pages update as files are added or reordered
+- **One-click merge & download** — combines all queued PDFs and triggers an instant download
+- **Dark mode** — toggle between light and dark themes
+- **Fully local** — no backend, no uploads; every operation runs in the browser
 
-```bash
-ng serve
+## Technology Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | [Angular 21](https://angular.dev) (standalone components, signals, resource API) |
+| PDF merging | [pdf-lib](https://pdf-lib.js.org) |
+| PDF preview | [pdfjs-dist](https://mozilla.github.io/pdf.js) |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com) |
+| Unit testing | [Vitest](https://vitest.dev) via `@angular/build` |
+| Language | TypeScript |
+
+## Project Structure
+
+```
+src/app/
+├── features/
+│   └── pdf-merger/          # Main feature component (page-level)
+├── components/              # Reusable UI components
+│   ├── drop-zone/           # File input via drag-and-drop or click
+│   ├── files-list/          # Queued files with reorder and remove controls
+│   ├── merge-button/        # Merge & download trigger
+│   └── pdf-preview/         # Live page thumbnail panel
+├── services/
+│   └── theme-service        # Light/dark mode state
+└── types/                   # Shared TypeScript interfaces
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Getting Started
 
-## Code scaffolding
+### Prerequisites
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- [Node.js](https://nodejs.org) v20 or later
+- npm v11 or later
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Installation
 
 ```bash
-ng generate --help
+# Clone the repository
+git clone https://github.com/DamianQS7/PdfMerger.git
+cd PdfMerger
+
+# Install dependencies
+npm install
 ```
 
-## Building
-
-To build the project run:
+### Running locally
 
 ```bash
-ng build
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Open your browser at `http://localhost:4200`. The app reloads automatically on file changes.
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Running unit tests
 
 ```bash
-ng test
+npm test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+To run tests for a single file:
 
 ```bash
-ng e2e
+npx ng test --include="**/drop-zone.spec.ts" --watch=false
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Production build
 
-## Additional Resources
+```bash
+npm run build
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Build artifacts are placed in the `dist/` directory.
+
+## Usage
+
+1. **Add files** — drag PDF files onto the drop zone, or click it to open the file picker. Non-PDF files are skipped with a warning.
+2. **Reorder** — use the up/down arrows on each file card to change the merge order.
+3. **Remove** — click the × button on a file card to remove it, or use **Clear all** to reset the queue.
+4. **Preview** — once 2 or more files are queued, a live thumbnail panel appears on the right.
+5. **Merge** — click **Merge & Download** to combine the files and download the result as `merged.pdf`.
