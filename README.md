@@ -20,6 +20,7 @@ A browser-based tool for merging multiple PDF files into a single document. All 
 | PDF preview | [pdfjs-dist](https://mozilla.github.io/pdf.js) |
 | Styling | [Tailwind CSS v4](https://tailwindcss.com) |
 | Unit testing | [Vitest](https://vitest.dev) via `@angular/build` |
+| E2E testing | [Playwright](https://playwright.dev) |
 | Language | TypeScript |
 
 ## Project Structure
@@ -36,6 +37,12 @@ src/app/
 ├── services/
 │   └── theme-service        # Light/dark mode state
 └── types/                   # Shared TypeScript interfaces
+
+e2e/
+├── fixtures/                # Sample PDF files used by e2e tests
+│   └── generate-fixtures.ts # Script to regenerate fixture files
+├── pdf-merger.spec.ts       # Playwright e2e test suite
+└── PLAYWRIGHT.md            # Guide to the e2e setup and test cases
 ```
 
 ## Getting Started
@@ -75,6 +82,26 @@ To run tests for a single file:
 ```bash
 npx ng test --include="**/drop-zone.spec.ts" --watch=false
 ```
+
+To run tests with coverage:
+
+```bash
+ng test --coverage --watch=false
+```
+
+### Running e2e tests
+
+```bash
+npm run e2e
+```
+
+Playwright will start `ng serve` automatically if it is not already running. To open the interactive Playwright UI:
+
+```bash
+npx playwright test --ui
+```
+
+See `e2e/PLAYWRIGHT.md` for a full guide to the e2e setup and test cases.
 
 ### Production build
 
